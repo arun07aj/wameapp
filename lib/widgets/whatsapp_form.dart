@@ -53,7 +53,6 @@ class _WhatsAppFormState extends State<WhatsAppForm> {
     }
   }
 
-
   Future<void> _launchWhatsApp(String phoneNumber) async {
     Uri url = Uri.parse('https://wa.me/${Uri.encodeFull(phoneNumber)}');
     if (await canLaunchUrl(url)) {
@@ -67,70 +66,80 @@ class _WhatsAppFormState extends State<WhatsAppForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('WhatsApp Chat Creator'),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  DropdownButton<Country>(
-                    value: _selectedCountry,
-                    onChanged: (Country? newValue) {
-                      setState(() {
-                        _selectedCountry = newValue;
-                      });
-                    },
-                    items: CountryData.countries.map<DropdownMenuItem<Country>>((Country country) {
-                      return DropdownMenuItem<Country>(
-                        value: country,
-                        child: Row(
-                          children: [
-                            Text(country.flag),
-                            const SizedBox(width: 1),
-                          ],
+    return Theme(
+      data: ThemeData.light(),
+      child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              height: 200,
+              decoration: BoxDecoration(
+                color: Colors.green.shade100,
+                borderRadius: BorderRadius.circular(20)
+              ),
+
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    DropdownButton<Country>(
+                      value: _selectedCountry,
+                      onChanged: (Country? newValue) {
+                        setState(() {
+                          _selectedCountry = newValue;
+                        });
+                      },
+                      items: CountryData.countries
+                          .map<DropdownMenuItem<Country>>((Country country) {
+                        return DropdownMenuItem<Country>(
+                          value: country,
+                          child: Row(
+                            children: [
+                              Text(country.flag),
+                              const SizedBox(width: 0.1),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: TextField(
+                        controller: _phoneNumberController,
+                        keyboardType: TextInputType.phone,
+                        decoration: const InputDecoration(
+                          labelText: 'Enter Phone Number',
+                          prefixIcon: Icon(Icons.phone),
+                          border: OutlineInputBorder(),
                         ),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      controller: _phoneNumberController,
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(
-                        labelText: 'Enter Phone Number',
-                        prefixIcon: Icon(Icons.phone),
-                        border: OutlineInputBorder(),
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _errorMessage,
+                  style: const TextStyle(
+                    color: Colors.red,
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                _errorMessage,
-                style: const TextStyle(
-                  color: Colors.red,
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text(
-                  'Open WhatsApp Chat',
-                  style: TextStyle(color: Colors.white),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green
+                  ),
+                  child: const Text(
+                    'Open WhatsApp Chat',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),),
           ),
         ),
-      ),
-    );
+      );
   }
 }
